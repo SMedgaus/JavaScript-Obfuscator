@@ -1,0 +1,19 @@
+@startuml
+    class Obfuscator {
+        -String code
+        -List<Mangler> manglers
+
+        +Obfuscator(String code)
+        +void addMangler(Mangler m)
+        +String getObfuscatableCode()
+    }
+    interface Mangler {
+        +void mangle(String code)
+    }
+    class TextEncoder implements Mangler
+    class NumberEncoder implements Mangler
+    class LoopMangler implements Mangler
+    class ConditionMangler implements Mangler
+
+    Obfuscator "1" o-- "0..*" Mangler
+@enduml
