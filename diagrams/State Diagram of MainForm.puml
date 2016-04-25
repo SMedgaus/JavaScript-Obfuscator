@@ -1,0 +1,19 @@
+@startuml
+    state "Waiting for\nuser action" as Waiting
+    state "Loading source\nfile" as Loading
+    state "Saving obfuscated\nfile" as Saving
+    state "Obfuscating source\nfile" as Obfuscating
+
+    [*] --> Waiting
+
+    Waiting -down-> Loading : User clicked\n'Load file'
+    Loading -up-> Waiting : Loading\nfinished
+
+    Waiting -right-> Saving : User clicked\n'Save file'
+    Saving -left-> Waiting : Saving\nfinished
+
+    Waiting -left-> Obfuscating : User clicked\n'Obfuscate file'
+    Obfuscating -right-> Waiting : Obfuscating\nfinished
+    
+    Waiting -up-> [*] : User clicked\n'Exit'
+@enduml
