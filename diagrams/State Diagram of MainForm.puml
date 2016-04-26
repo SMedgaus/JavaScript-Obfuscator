@@ -1,4 +1,5 @@
 @startuml
+    title UML State Diagram for MainForm
     state "Waiting for\nuser action" as Waiting
     state "Loading source\nfile" as Loading
     state "Saving obfuscated\nfile" as Saving
