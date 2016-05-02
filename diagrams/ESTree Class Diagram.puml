@@ -1,0 +1,67 @@
+@startuml
+    title ESTree
+
+    hide empty fields    
+    hide empty methods
+
+    class Node {
+        -String type
+    }
+
+    class Program extends Node {
+        -Collection<Statement> body
+    }
+
+    Program "1" o-- "0..*" Statement
+    
+    class Statement extends Node
+    
+    class Identifier extends Expression {
+        -String name
+    }
+
+
+    class Function extends Node {
+        -Identifier id
+        -Collection<Identifier> params
+        -BlockStatement body
+    }
+
+    Function *-- "0..1" Identifier
+    Function *-- "0..*" Identifier
+    Function "1" *-- "1" BlockStatement
+
+    class Declaration extends Statement
+
+    class Expression extends Node
+
+        class ExpressionStatement extends Statement {
+            -Expression expression
+        }
+        
+        ExpressionStatement "1" *-- "1" Expression
+
+        class BlockStatement extends Statement {
+            -Collection<Statement> body
+        }
+
+        BlockStatement "1" *-- "1..*" Statement
+
+        class EmptyStatement extends Statement
+
+        class DebuggerStatement extends Statement
+
+        class WithStatement extends Statement {
+            -Expression object
+            -Statement body
+        }
+
+        WithStatement "1" *-- "1" Expression
+        WithStatement "1" *--- "1" Statement
+
+        class ReturnStatement extends Statement {
+            -Expression argument
+        }
+
+        ReturnStatement "1" *--- "1" Expression
+@enduml
