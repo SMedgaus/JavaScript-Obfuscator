@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package obfuscating;
+package traversing;
 
 import org.json.simple.JSONObject;
 
@@ -11,9 +11,7 @@ import org.json.simple.JSONObject;
  *
  * @author Sergey
  */
-@FunctionalInterface
-public interface Mangler {
-
-    public void mangle(JSONObject code);
+public interface NodeWorker {
     
+    public TraversingOption workWithNode(JSONObject object);
 }

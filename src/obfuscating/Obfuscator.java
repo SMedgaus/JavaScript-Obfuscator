@@ -56,8 +56,8 @@ final public class Obfuscator {
         Invocable inv = (Invocable) nashornEngine;
         
         Object tree = inv.invokeMethod(esprima, "parse", code);
-        Object mangledTree = inv.invokeMethod(esmangle, "mangle", tree);
         
+        Object mangledTree = inv.invokeMethod(esmangle, "mangle", tree);
         Object generatingOptions = inv.invokeMethod(JSON, "parse", 
                 "{\"format\":{ \"indent\":{ \"style\": \"\", \"base\": 0}, \"quotes\": \"auto\", \"compact\": true}}");
         Object minifiedCode = inv.invokeMethod(escodegen, "generate", mangledTree, generatingOptions);
