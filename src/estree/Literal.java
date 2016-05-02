@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package obfuscating;
+package estree;
 
-import org.json.simple.JSONObject;
+import estree.expressions.Expression;
+import estree.expressions.PropertyKeyInterface;
 
 /**
  *
  * @author Sergey
  */
-@FunctionalInterface
-public interface Mangler {
-
-    public void mangle(JSONObject code);
+public class Literal extends Expression implements PropertyKeyInterface{
+    
+    private LiteralValue value;
     
 }

@@ -3,17 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package obfuscating;
+package estree;
 
-import org.json.simple.JSONObject;
+import estree.statements.Statement;
+import java.util.Collection;
 
 /**
  *
  * @author Sergey
  */
-@FunctionalInterface
-public interface Mangler {
+public class Program extends Node {
 
-    public void mangle(JSONObject code);
+    private String sourceType;
+    
+    private Collection<Statement> body;
     
 }

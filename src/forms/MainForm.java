@@ -17,6 +17,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import obfuscating.Obfuscator;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -128,10 +129,14 @@ public class MainForm extends javax.swing.JFrame {
     private void obfucateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_obfucateBtnActionPerformed
         String sourceCode = sourceCodeTextArea.getText();
         try {
+            Properties obfuscatingOptions = new Properties();
+            obfuscatingOptions.put("constantPruner", "true");
+            
             String obfuscatedCode =
-                    codeObfuscator.obfuscateCode(sourceCode, new Properties());
+                    codeObfuscator.obfuscateCode(sourceCode, obfuscatingOptions);
+            
             mangledCodeTextArea.setText(obfuscatedCode);
-        } catch (ScriptException | NoSuchMethodException ex) {
+        } catch (ScriptException | NoSuchMethodException | ParseException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_obfucateBtnActionPerformed

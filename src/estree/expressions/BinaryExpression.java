@@ -3,17 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package obfuscating;
-
-import org.json.simple.JSONObject;
+package estree.expressions;
 
 /**
  *
  * @author Sergey
  */
-@FunctionalInterface
-public interface Mangler {
-
-    public void mangle(JSONObject code);
+public class BinaryExpression extends Expression {
+    
+    private String operator;
+    
+    private Expression left;
+    
+    private Expression right;
     
 }

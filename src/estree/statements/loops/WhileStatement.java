@@ -3,17 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package obfuscating;
+package estree.statements.loops;
 
-import org.json.simple.JSONObject;
+import estree.expressions.Expression;
+import estree.statements.Statement;
 
 /**
  *
  * @author Sergey
  */
-@FunctionalInterface
-public interface Mangler {
-
-    public void mangle(JSONObject code);
+public class WhileStatement extends Statement {
     
+    private Expression test;
+    
+    private Statement body;
 }

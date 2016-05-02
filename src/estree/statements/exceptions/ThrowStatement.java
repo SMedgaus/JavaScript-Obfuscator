@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package obfuscating;
+package estree.statements.exceptions;
 
-import org.json.simple.JSONObject;
+import estree.expressions.Expression;
+import estree.statements.Statement;
 
 /**
  *
  * @author Sergey
  */
-@FunctionalInterface
-public interface Mangler {
+public class ThrowStatement extends Statement {
 
-    public void mangle(JSONObject code);
+    private Expression argument;
     
 }
