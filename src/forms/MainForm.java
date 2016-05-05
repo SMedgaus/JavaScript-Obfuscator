@@ -47,30 +47,113 @@ public class MainForm extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        sourceCodeTextArea = new javax.swing.JTextArea();
+        jPanel1 = new javax.swing.JPanel();
+        optionsPanel = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jCheckBox4 = new javax.swing.JCheckBox();
+        jCheckBox2 = new javax.swing.JCheckBox();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+        jCheckBox3 = new javax.swing.JCheckBox();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jPanel5 = new javax.swing.JPanel();
         obfucateBtn = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        saveCodeBtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         mangledCodeTextArea = new javax.swing.JTextArea();
         loadCodeBtn = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        sourceCodeTextArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        sourceCodeTextArea.setColumns(20);
-        sourceCodeTextArea.setLineWrap(true);
-        sourceCodeTextArea.setRows(5);
-        jScrollPane1.setViewportView(sourceCodeTextArea);
+        jPanel1.setLayout(new java.awt.GridBagLayout());
 
+        optionsPanel.setMinimumSize(new java.awt.Dimension(250, 80));
+        optionsPanel.setLayout(new java.awt.GridBagLayout());
+
+        jPanel4.setLayout(new java.awt.GridBagLayout());
+
+        jCheckBox4.setText("выбрать все");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        jPanel4.add(jCheckBox4, gridBagConstraints);
+
+        jCheckBox2.setText("Переименование переменных");
+        jCheckBox2.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        jPanel4.add(jCheckBox2, gridBagConstraints);
+
+        jCheckBox1.setText("Преобразование if-else");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        jPanel4.add(jCheckBox1, gridBagConstraints);
+
+        jLabel1.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        jLabel1.setText("Режимы обфускации:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        jPanel4.add(jLabel1, gridBagConstraints);
+
+        jCheckBox3.setSelected(true);
+        jCheckBox3.setText("Удаление форматирования");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.1;
-        gridBagConstraints.weighty = 0.1;
-        getContentPane().add(jScrollPane1, gridBagConstraints);
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        jPanel4.add(jCheckBox3, gridBagConstraints);
 
-        obfucateBtn.setText("Обфусцировать код");
+        jScrollPane3.setMinimumSize(new java.awt.Dimension(220, 25));
+        jScrollPane3.setPreferredSize(new java.awt.Dimension(250, 56));
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(3);
+        jTextArea1.setTabSize(2);
+        jTextArea1.setText("Данный режим удаляет всё форматирование кода (пробелы, знаки табуляции и перевода строк).");
+        jTextArea1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jTextArea1.setDisabledTextColor(new java.awt.Color(51, 51, 51));
+        jTextArea1.setEnabled(false);
+        jTextArea1.setMinimumSize(new java.awt.Dimension(20, 18));
+        jTextArea1.setPreferredSize(new java.awt.Dimension(220, 50));
+        jScrollPane3.setViewportView(jTextArea1);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        jPanel4.add(jScrollPane3, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
+        gridBagConstraints.weighty = 0.1;
+        optionsPanel.add(jPanel4, gridBagConstraints);
+
+        jPanel5.setLayout(new java.awt.GridBagLayout());
+
+        obfucateBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/obfuscateBtn.png"))); // NOI18N
+        obfucateBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        obfucateBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         obfucateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 obfucateBtnActionPerformed(evt);
@@ -78,8 +161,31 @@ public class MainForm extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        getContentPane().add(obfucateBtn, gridBagConstraints);
+        gridBagConstraints.gridy = 0;
+        jPanel5.add(obfucateBtn, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weighty = 1.0;
+        optionsPanel.add(jPanel5, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        jPanel1.add(optionsPanel, gridBagConstraints);
+
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        saveCodeBtn.setText("Сохранить файл");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        jPanel3.add(saveCodeBtn, gridBagConstraints);
 
         mangledCodeTextArea.setColumns(20);
         mangledCodeTextArea.setLineWrap(true);
@@ -92,7 +198,7 @@ public class MainForm extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
-        getContentPane().add(jScrollPane2, gridBagConstraints);
+        jPanel3.add(jScrollPane2, gridBagConstraints);
 
         loadCodeBtn.setText("Загрузить файл");
         loadCodeBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -103,9 +209,41 @@ public class MainForm extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        getContentPane().add(loadCodeBtn, gridBagConstraints);
+        jPanel3.add(loadCodeBtn, gridBagConstraints);
 
-        setSize(new java.awt.Dimension(337, 543));
+        sourceCodeTextArea.setColumns(20);
+        sourceCodeTextArea.setLineWrap(true);
+        sourceCodeTextArea.setRows(5);
+        jScrollPane1.setViewportView(sourceCodeTextArea);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.weighty = 0.1;
+        jPanel3.add(jScrollPane1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.99;
+        gridBagConstraints.weighty = 0.1;
+        jPanel1.add(jPanel3, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.2;
+        gridBagConstraints.weighty = 0.2;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        getContentPane().add(jPanel1, gridBagConstraints);
+
+        setSize(new java.awt.Dimension(588, 543));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -182,11 +320,24 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JCheckBox jCheckBox4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton loadCodeBtn;
     private javax.swing.JTextArea mangledCodeTextArea;
     private javax.swing.JButton obfucateBtn;
+    private javax.swing.JPanel optionsPanel;
+    private javax.swing.JButton saveCodeBtn;
     private javax.swing.JTextArea sourceCodeTextArea;
     // End of variables declaration//GEN-END:variables
 }
