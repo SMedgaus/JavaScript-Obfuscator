@@ -33,20 +33,33 @@ public class TernaryTransformer implements Mangler {
 
     private ArrayList<String> rubbishFunctions;
 
+    private boolean isRubbishNeeded = false;
+
     @Override
     @SuppressWarnings("unchecked")
     public void mangle(JSONObject code) {
 
-        rubbishFunctions = new ArrayList<>();
+        JSONWalker walker = new JSONWalker();
 
-        int functionsNumber = new Random(System.nanoTime()).nextInt(MAX_RUBBISH_FUNCTIONS) + 1;
-
-        for (int i = 0; i < functionsNumber; i++) {
-            String functionName = addRubbishFunction(code);
-            rubbishFunctions.add(functionName);
+        //checking the necessity of rubbish functions
+        walker.walk(code, (JSONObject node,
+                Object parent) -> {
+                    isRubbishNeeded |= node.get("type").equals("IfStatement")
+                    && node.get("alternate") == null;
+                    return TraversingOption.CONTINUE;
+                });
+        
+        if (isRubbishNeeded) {
+            rubbishFunctions = new ArrayList<>();
+            
+            int functionsNumber = new Random(System.nanoTime()).nextInt(MAX_RUBBISH_FUNCTIONS) + 1;
+            
+            for (int i = 0; i < functionsNumber; i++) {
+                String functionName = addRubbishFunction(code);
+                rubbishFunctions.add(functionName);
+            }
         }
 
-        JSONWalker walker = new JSONWalker();
         walker.walk(code, (JSONObject node,
                 Object parent) -> {
                     if (node.get("type").equals("IfStatement") && parent != null) {
@@ -126,14 +139,12 @@ public class TernaryTransformer implements Mangler {
                     break;
             }
         } else {
-            int numberOfFunctions = rubbishFunctions.size();
-            String functionName = rubbishFunctions.get(
-                    new Random(System.nanoTime()).nextInt(numberOfFunctions));
-            
+            String functionName = getRandomFuncName();
+
             JSONObject calleeNode = new JSONObject();
             calleeNode.put("type", "Identifier");
             calleeNode.put("name", functionName);
-            
+
             JSONObject expression = new JSONObject();
             expression.put("type", "CallExpression");
             expression.put("arguments", new JSONArray());
@@ -150,6 +161,13 @@ public class TernaryTransformer implements Mangler {
         transformedNode.put("expression", expressionNode);
 
         return transformedNode;
+    }
+
+    private String getRandomFuncName() {
+        int numberOfFunctions = rubbishFunctions.size();
+        String functionName = rubbishFunctions.get(
+                new Random(System.nanoTime()).nextInt(numberOfFunctions));
+        return functionName;
     }
 
     /**
@@ -234,8 +252,6 @@ public class TernaryTransformer implements Mangler {
 
         try {
             JSONObject newFunction = new Esprima().parseCode(newExpression.toString());
-            System.out.println(newExpression.toString());
-            System.out.println(newFunction.toJSONString());
             newFunction = (JSONObject) ((List) newFunction.get("body")).get(0);
 
             JSONArray bodyArray = (JSONArray) code.get("body");
