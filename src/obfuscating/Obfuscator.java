@@ -92,6 +92,10 @@ final public class Obfuscator {
             manglers.add(new TernaryTransformer());
         }
         
+        if (obfuscatingOptions.getProperty("renaming", "false").equals("true")) {
+            manglers.add(new RenamingMangler());
+        }
+        
         return manglers;
     }
 }

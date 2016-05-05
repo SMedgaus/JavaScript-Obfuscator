@@ -283,6 +283,7 @@ public class MainForm extends javax.swing.JFrame {
         try {
             Properties obfuscatingOptions = new Properties();
             obfuscatingOptions.put("ternaryTransformer", "true");
+            obfuscatingOptions.put("renaming", "true");
             
             String obfuscatedCode =
                     codeObfuscator.obfuscateCode(sourceCode, obfuscatingOptions);
