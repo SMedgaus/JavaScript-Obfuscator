@@ -5,14 +5,18 @@
  */
 package forms;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.script.ScriptException;
+import javax.swing.AbstractButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -49,12 +53,12 @@ public class MainForm extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         optionsPanel = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        obfuscatingOptionsPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jCheckBox3 = new javax.swing.JCheckBox();
+        chooseAllOptionsChBox = new javax.swing.JCheckBox();
+        variablesRenamingChBox = new javax.swing.JCheckBox();
+        ternaryTransformerChBox = new javax.swing.JCheckBox();
+        removeFormattingChBox = new javax.swing.JCheckBox();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jPanel5 = new javax.swing.JPanel();
@@ -75,30 +79,7 @@ public class MainForm extends javax.swing.JFrame {
         optionsPanel.setMinimumSize(new java.awt.Dimension(250, 80));
         optionsPanel.setLayout(new java.awt.GridBagLayout());
 
-        jPanel4.setLayout(new java.awt.GridBagLayout());
-
-        jCheckBox4.setText("выбрать все");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        jPanel4.add(jCheckBox4, gridBagConstraints);
-
-        jCheckBox2.setText("Переименование переменных");
-        jCheckBox2.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        jPanel4.add(jCheckBox2, gridBagConstraints);
-
-        jCheckBox1.setText("Преобразование if-else");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        jPanel4.add(jCheckBox1, gridBagConstraints);
+        obfuscatingOptionsPanel.setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jLabel1.setText("Режимы обфускации:");
@@ -106,16 +87,44 @@ public class MainForm extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        jPanel4.add(jLabel1, gridBagConstraints);
+        obfuscatingOptionsPanel.add(jLabel1, gridBagConstraints);
 
-        jCheckBox3.setSelected(true);
-        jCheckBox3.setText("Удаление форматирования");
+        chooseAllOptionsChBox.setText("выбрать все");
+        chooseAllOptionsChBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                chooseAllOptionsChBoxMouseClicked(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        obfuscatingOptionsPanel.add(chooseAllOptionsChBox, gridBagConstraints);
+
+        variablesRenamingChBox.setText("Переименование переменных");
+        variablesRenamingChBox.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        obfuscatingOptionsPanel.add(variablesRenamingChBox, gridBagConstraints);
+
+        ternaryTransformerChBox.setText("Преобразование if-else");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        obfuscatingOptionsPanel.add(ternaryTransformerChBox, gridBagConstraints);
+
+        removeFormattingChBox.setSelected(true);
+        removeFormattingChBox.setText("Удаление форматирования");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        jPanel4.add(jCheckBox3, gridBagConstraints);
+        obfuscatingOptionsPanel.add(removeFormattingChBox, gridBagConstraints);
 
         jScrollPane3.setMinimumSize(new java.awt.Dimension(220, 25));
         jScrollPane3.setPreferredSize(new java.awt.Dimension(250, 56));
@@ -139,7 +148,7 @@ public class MainForm extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        jPanel4.add(jScrollPane3, gridBagConstraints);
+        obfuscatingOptionsPanel.add(jScrollPane3, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -147,7 +156,7 @@ public class MainForm extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
         gridBagConstraints.weighty = 0.1;
-        optionsPanel.add(jPanel4, gridBagConstraints);
+        optionsPanel.add(obfuscatingOptionsPanel, gridBagConstraints);
 
         jPanel5.setLayout(new java.awt.GridBagLayout());
 
@@ -182,6 +191,11 @@ public class MainForm extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
         saveCodeBtn.setText("Сохранить файл");
+        saveCodeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveCodeBtnActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -279,6 +293,30 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_obfucateBtnActionPerformed
 
+    private void chooseAllOptionsChBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chooseAllOptionsChBoxMouseClicked
+        boolean shouldSelectAll = chooseAllOptionsChBox.isSelected();
+        for (Component component : obfuscatingOptionsPanel.getComponents()) {
+            if (component instanceof JCheckBox && component != evt.getComponent()) {
+                ((AbstractButton) component).setSelected(shouldSelectAll);
+            }
+        }
+    }//GEN-LAST:event_chooseAllOptionsChBoxMouseClicked
+
+    private void saveCodeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveCodeBtnActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new FileNameExtensionFilter("JavaScript source files (*.js)",
+            "js"));
+        
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try {
+                File javaScriptFile = chooser.getSelectedFile();
+                Files.write(javaScriptFile.toPath(), mangledCodeTextArea.getText().getBytes(), StandardOpenOption.CREATE_NEW);
+            } catch (IOException ex) {
+                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_saveCodeBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -320,14 +358,10 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
+    private javax.swing.JCheckBox chooseAllOptionsChBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -336,8 +370,12 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton loadCodeBtn;
     private javax.swing.JTextArea mangledCodeTextArea;
     private javax.swing.JButton obfucateBtn;
+    private javax.swing.JPanel obfuscatingOptionsPanel;
     private javax.swing.JPanel optionsPanel;
+    private javax.swing.JCheckBox removeFormattingChBox;
     private javax.swing.JButton saveCodeBtn;
     private javax.swing.JTextArea sourceCodeTextArea;
+    private javax.swing.JCheckBox ternaryTransformerChBox;
+    private javax.swing.JCheckBox variablesRenamingChBox;
     // End of variables declaration//GEN-END:variables
 }
