@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
  * @author Sergey
  */
 public interface NodeWorker {
-    
-    public TraversingOption workWithNode(JSONObject object);
+
+    public TraversingOption workWithNode(JSONObject node, Object parent);
+
 }

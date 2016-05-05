@@ -5,6 +5,7 @@
  */
 package traversing;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
@@ -12,16 +13,36 @@ import org.json.simple.JSONObject;
  * @author Sergey
  */
 public class JSONWalker {
-    
-    public TraversingOption walk(JSONObject obj, NodeWorker worker) {
-        TraversingOption workResult = worker.workWithNode(obj);
-        
+
+    public void walk(JSONObject node, NodeWorker worker) {
+        if (node != null) {
+            walk(node, null, worker);
+        }
+    }
+
+    private TraversingOption walk(JSONObject node, Object parent, NodeWorker worker) {
+        TraversingOption workResult = worker.workWithNode(node, parent);
+
         if (workResult == TraversingOption.CONTINUE) {
-            for(Object objPropery : obj.keySet()) {
-                if (objPropery instanceof JSONObject) {
-                    if (walk((JSONObject) objPropery, worker) 
-                            == TraversingOption.BREAK) {
-                        return TraversingOption.BREAK;
+            for (Object nodeValue : node.values()) {
+                if (nodeValue != null) {
+                    
+                    if (nodeValue instanceof JSONObject) {
+                        if (walk((JSONObject) nodeValue, node, worker)
+                                == TraversingOption.BREAK) {
+                            return TraversingOption.BREAK;
+                        }
+                    }
+                    
+                    if (nodeValue instanceof JSONArray) {
+                        for (Object arrayElement : (Iterable<? extends Object>) nodeValue) {
+                            if (arrayElement != null) {
+                                if (walk((JSONObject) arrayElement, nodeValue, worker)
+                                        == TraversingOption.BREAK) {
+                                    return TraversingOption.BREAK;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -29,5 +50,5 @@ public class JSONWalker {
         
         return workResult;
     }
-    
+
 }
