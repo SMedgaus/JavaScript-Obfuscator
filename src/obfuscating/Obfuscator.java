@@ -30,8 +30,6 @@ final public class Obfuscator {
 
     private final JSObject escodegen;
 
-    private final JSObject esmangle;
-
     private final JSObject JSON;
 
     public Obfuscator() throws FileNotFoundException, ScriptException {
@@ -39,11 +37,9 @@ final public class Obfuscator {
 
         nashornEngine.eval(new FileReader("libs/esprima.js"));
         nashornEngine.eval(new FileReader("libs/escodegen.js"));
-        nashornEngine.eval(new FileReader("libs/esmangle.js"));
 
         this.esprima = (JSObject) nashornEngine.get("esprima");
         this.escodegen = (JSObject) nashornEngine.get("escodegen");
-        this.esmangle = (JSObject) nashornEngine.get("esmangle");
         this.JSON = (JSObject) nashornEngine.get("JSON");
     }
 
@@ -55,6 +51,7 @@ final public class Obfuscator {
      * @return
      * @throws javax.script.ScriptException
      * @throws java.lang.NoSuchMethodException
+     * @throws org.json.simple.parser.ParseException
      */
     public String obfuscateCode(String code, Properties obfuscatingOptions)
             throws ScriptException, NoSuchMethodException, ParseException {
@@ -73,10 +70,9 @@ final public class Obfuscator {
 
         tree = inv.invokeMethod(JSON, "parse", JSONTreeObject.toJSONString());
 
-        Object mangledTree = inv.invokeMethod(esmangle, "mangle", tree);
         Object generatingOptions = inv.invokeMethod(JSON, "parse",
                 "{\"format\":{ \"indent\":{ \"style\": \"\", \"base\": 0}, \"quotes\": \"auto\", \"compact\": true}}");
-        Object minifiedCode = inv.invokeMethod(escodegen, "generate", mangledTree, generatingOptions);
+        Object minifiedCode = inv.invokeMethod(escodegen, "generate", tree, generatingOptions);
         return (String) minifiedCode;
     }
 
@@ -90,6 +86,10 @@ final public class Obfuscator {
         
         if (obfuscatingOptions.getProperty("constantPruner", "false").equals("true")) {
             manglers.add(new ConstantPruner());
+        }
+        
+        if (obfuscatingOptions.getProperty("ternaryTransformer", "false").equals("true")) {
+            manglers.add(new TernaryTransformer());
         }
         
         return manglers;
