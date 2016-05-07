@@ -31,7 +31,7 @@ final public class Obfuscator {
     private final JSObject escodegen;
 
     private final JSObject JSON;
-
+    
     public Obfuscator() throws FileNotFoundException, ScriptException {
         this.nashornEngine = new ScriptEngineManager().getEngineByName("nashorn");
 
