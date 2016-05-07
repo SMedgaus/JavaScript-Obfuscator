@@ -282,6 +282,7 @@ public class MainForm extends javax.swing.JFrame {
         String sourceCode = sourceCodeTextArea.getText();
         try {
             Properties obfuscatingOptions = new Properties();
+            obfuscatingOptions.put("constantPruner", "true");
             obfuscatingOptions.put("ternaryTransformer", "true");
             obfuscatingOptions.put("renaming", "true");
             

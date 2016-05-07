@@ -5,6 +5,7 @@
  */
 package traversing;
 
+import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -26,14 +27,14 @@ public abstract class JSONWalker {
         if (workResult == TraversingOption.CONTINUE) {
             for (Object nodeValue : node.values()) {
                 if (nodeValue != null) {
-                    
+
                     if (nodeValue instanceof JSONObject) {
                         if (walk((JSONObject) nodeValue, node, worker)
                                 == TraversingOption.BREAK) {
                             return TraversingOption.BREAK;
                         }
                     }
-                    
+
                     if (nodeValue instanceof JSONArray) {
                         for (Object arrayElement : (Iterable<? extends Object>) nodeValue) {
                             if (arrayElement != null) {
@@ -47,8 +48,35 @@ public abstract class JSONWalker {
                 }
             }
         }
-        
+
         return workResult;
     }
 
+    /**
+     * @param parent can be JSONObject or JSONArray
+     * @param oldNode
+     * @param newNode
+     */
+    public static void replaceNodeInParent(Object parent, JSONObject oldNode, JSONObject newNode) {
+        if (parent != null) {
+            if (parent instanceof JSONObject) {
+                for (Object objEntry : ((Map) parent).entrySet()) {
+                    Map.Entry entry = (Map.Entry) objEntry;
+                    if (entry.getValue().equals(oldNode)) {
+                        entry.setValue(newNode);
+                        return;
+                    }
+                }
+            } else {
+                JSONArray parentArray = (JSONArray) parent;
+                for (int i = 0; i < parentArray.size(); i++) {
+                    JSONObject child = (JSONObject) parentArray.get(i);
+                    if (child == oldNode) {
+                        parentArray.set(i, newNode);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 }

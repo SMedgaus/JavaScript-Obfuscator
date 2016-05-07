@@ -5,12 +5,13 @@
  */
 package obfuscating;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import traversing.JSONWalker;
+import traversing.TraversingOption;
 
 /**
  *
@@ -18,90 +19,108 @@ import org.json.simple.JSONObject;
  */
 public class ConstantPruner implements Mangler {
 
-    private final int BASE_FUNCTION_LEVEL = 0;
+    //key - variable name, value - initialzing value
+    private final HashMap<String, JSONObject> constVars = new HashMap<>();
 
-    private final Set<Variable> declaredVars = new HashSet<>();
-
-    /**
-     * Variables, which values are changing in code.
-     */
-    private final Set<Variable> usedVars = new HashSet<>();
-    
-    private final Set<Variable> changedVars = new HashSet<>();
+    private JSONObject code;
 
     @Override
     public void mangle(JSONObject code) {
-        JSONArray scriptBody = (JSONArray) code.get("body");
-        for (Object statementObj : scriptBody) {
-            JSONObject statement = (JSONObject) statementObj;
-            switch (statement.get("type").toString()) {
-                case "FunctionDeclaration":
-                    findVarsInFunctionBody(statement, BASE_FUNCTION_LEVEL + 1);
-                    break;
 
-                case "VariableDeclaration":
-                    findVarsInDeclaration(statement, BASE_FUNCTION_LEVEL);
-                    break;
+        this.code = code;
 
-                case "ExpressionStatement":
-                    break;
-            }
-        }
-    }
+        findPossibleConstants();
 
-    private void findVarsInFunctionBody(JSONObject functionBody, int levelOfFunc) {
+        exludeChangingVariables();
+
+        exludeNonLiteralConstants();
+
+        replaceConstantUsage();
 
     }
 
-    private void findVarsInDeclaration(JSONObject statement, int levelOfFunc) {
-        JSONArray declarations = (JSONArray) statement.get("declarations");
-        @SuppressWarnings("unchecked")
-        Iterator<JSONObject> it = declarations.iterator();
-        while (it.hasNext()) {
-            JSONObject variableDeclaration = it.next();
-            String variableName = (String) ((Map) variableDeclaration.get("id")).get("name");
-            declaredVars.add(new Variable(levelOfFunc, variableName));
+    private void findPossibleConstants() {
+        JSONWalker.walk(code, (JSONObject node,
+                Object parent) -> {
+                    if (node.get("type").equals("VariableDeclarator")) {
+                        String varName = (String) ((Map) node.get("id")).get("name");
+                        constVars.put(varName, (JSONObject) node.get("init"));
+                    }
 
-            JSONObject init = (JSONObject) variableDeclaration.get("init");
-            if (init != null) {
-                String initType = (String) init.get("type");
-                if (initType.equals("Identifier")) {
-                    usedVars.add(new Variable(levelOfFunc, (String) init.get("name")));
-                }
-                if (initType.endsWith("Expression")) {
-                    findVarsInExpression(init, levelOfFunc);
-                }
-            }
-        }
+                    return TraversingOption.CONTINUE;
+                });
     }
 
-    private void findVarsInExpression(JSONObject expression, int levelOfFunc) {
-        String type = (String) expression.get("type");
-        switch (type) {
-            case "UnaryExpression":
-            case "UpdateExpression":
-                JSONObject argument = (JSONObject) expression.get("argument");
-                if (argument.get("type").equals("Identifier")) {
-                    usedVars.add(new Variable(levelOfFunc, (String) argument.get("name")));
-                }
-                break;
+    private void exludeChangingVariables() {
+        JSONWalker.walk(code, (JSONObject node,
+                Object parent) -> {
+                    String nodeType = (String) node.get("type");
 
-            case "BinaryExpression":
-                JSONObject left = (JSONObject) expression.get("left");
-                if (left.get("type").equals("Identifier")) {
-                    usedVars.add(new Variable(levelOfFunc, (String) left.get("name")));
-                } else if (left.get("type").toString().endsWith("Expression")) {
-                    findVarsInExpression(left, levelOfFunc);
-                }
-                
-                JSONObject right = (JSONObject) expression.get("right");
-                if (right.get("type").equals("Identifier")) {
-                    usedVars.add(new Variable(levelOfFunc, (String) right.get("name")));
-                } else if (right.get("type").toString().endsWith("Expression")) {
-                    findVarsInExpression(right, levelOfFunc);
-                }
+                    if (nodeType.equals("UpdateExpression")) {
+                        String varName = (String) ((Map) node.get("argument")).get("name");
+                        constVars.remove(varName);
+                    }
 
-        }
+                    if (nodeType.equals("AssignmentExpression")) {
+                        String varName = (String) ((Map) node.get("left")).get("name");
+                        JSONObject init = (JSONObject) node.get("right");
+
+                        if (constVars.containsKey(varName)) {
+                            if (constVars.get(varName) != null) { //variable is already initialized
+                                constVars.remove(varName);
+                            } else {
+                                constVars.put(varName, init);
+                            }
+                        }
+                    }
+
+                    return TraversingOption.CONTINUE;
+                });
     }
 
+    private void exludeNonLiteralConstants() {
+        constVars.entrySet().removeIf((Map.Entry<String, JSONObject> t)
+                -> !t.getValue().get("type").equals("Literal"));
+    }
+
+    private void replaceConstantUsage() {
+        JSONWalker.walk(code, (JSONObject node,
+                Object parent) -> {
+                    String nodeType = (String) node.get("type");
+
+                    if (nodeType.equals("VariableDeclaration")) {
+                        JSONArray declarations = (JSONArray) node.get("declarations");
+                        for (Iterator it = declarations.iterator(); it.hasNext();) {
+                            JSONObject d = (JSONObject) it.next();
+                            String variableName = (String) ((Map) d.get("id")).get("name");
+                            if (constVars.containsKey(variableName)) {
+                                it.remove();
+                            }
+                        }
+
+                        if (declarations.isEmpty()) {
+                            node.remove("kind");
+                            node.remove("declarations");
+                            node.put("type", "EmptyStatement");
+                        }
+                    }
+
+                    return TraversingOption.CONTINUE;
+                });
+        
+        JSONWalker.walk(code, (JSONObject node,
+                Object parent) -> {
+                    String nodeType = (String) node.get("type");
+
+                    if (nodeType.equals("Identifier")) {
+                        String varName = (String) node.get("name");
+                        if (constVars.containsKey(varName)) {
+                            JSONWalker.replaceNodeInParent(parent, node, constVars.get(varName));
+                        }
+                    }
+
+                    return TraversingOption.CONTINUE;
+                });
+
+    }
 }
