@@ -80,6 +80,9 @@ public class ConstantPruner implements Mangler {
 
     private void exludeNonLiteralConstants() {
         constVars.entrySet().removeIf((Map.Entry<String, JSONObject> t)
+                -> t.getValue() == null);
+        
+        constVars.entrySet().removeIf((Map.Entry<String, JSONObject> t)
                 -> !t.getValue().get("type").equals("Literal"));
     }
 
