@@ -39,10 +39,8 @@ public class TernaryTransformer implements Mangler {
     @SuppressWarnings("unchecked")
     public void mangle(JSONObject code) {
 
-        JSONWalker walker = new JSONWalker();
-
         //checking the necessity of rubbish functions
-        walker.walk(code, (JSONObject node,
+        JSONWalker.walk(code, (JSONObject node,
                 Object parent) -> {
                     isRubbishNeeded |= node.get("type").equals("IfStatement")
                     && node.get("alternate") == null;
@@ -60,7 +58,7 @@ public class TernaryTransformer implements Mangler {
             }
         }
 
-        walker.walk(code, (JSONObject node,
+        JSONWalker.walk(code, (JSONObject node,
                 Object parent) -> {
                     if (node.get("type").equals("IfStatement") && parent != null) {
                         if (parent instanceof JSONObject) {

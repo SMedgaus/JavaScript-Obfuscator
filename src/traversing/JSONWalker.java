@@ -12,15 +12,15 @@ import org.json.simple.JSONObject;
  *
  * @author Sergey
  */
-public class JSONWalker {
+public abstract class JSONWalker {
 
-    public void walk(JSONObject node, NodeWorker worker) {
+    public static void walk(JSONObject node, NodeWorker worker) {
         if (node != null) {
             walk(node, null, worker);
         }
     }
 
-    private TraversingOption walk(JSONObject node, Object parent, NodeWorker worker) {
+    private static TraversingOption walk(JSONObject node, Object parent, NodeWorker worker) {
         TraversingOption workResult = worker.workWithNode(node, parent);
 
         if (workResult == TraversingOption.CONTINUE) {

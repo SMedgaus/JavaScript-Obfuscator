@@ -27,10 +27,9 @@ public class RenamingMangler implements Mangler {
 
     @Override
     public void mangle(JSONObject code) {
-        JSONWalker walker = new JSONWalker();
 
         //recording all variable and function declarations
-        walker.walk(code, (JSONObject node,
+        JSONWalker.walk(code, (JSONObject node,
                 Object parentObj) -> {
                     if (node != null && node.get("type").equals("Identifier")) {
                         try {
@@ -53,7 +52,7 @@ public class RenamingMangler implements Mangler {
                 });
 
         //replacing variable and function names
-        walker.walk(code, (JSONObject node,
+        JSONWalker.walk(code, (JSONObject node,
                 Object parent) -> {
                     if (node != null && node.get("type").equals("Identifier")) {
                         String identifierValue = (String) node.get("name");
