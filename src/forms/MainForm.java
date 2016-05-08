@@ -7,6 +7,7 @@ package forms;
 
 import java.awt.Component;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,16 +15,16 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.script.ScriptException;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.SwingWorker.StateValue;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import obfuscating.Obfuscator;
-import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -32,8 +33,6 @@ import org.json.simple.parser.ParseException;
 public class MainForm extends javax.swing.JFrame {
 
     private static final long serialVersionUID = 1L;
-
-    private static Obfuscator codeObfuscator;
 
     private final ArrayList<JCheckBox> optioningCheckBoxes = new ArrayList<>();
 
@@ -45,6 +44,9 @@ public class MainForm extends javax.swing.JFrame {
         initComponents();
 
         initializeOptioningCheckBoxes();
+
+        progressLabel.setVisible(false);
+        obfuscationProgressBar.setVisible(false);
     }
 
     /**
@@ -76,12 +78,12 @@ public class MainForm extends javax.swing.JFrame {
         constantPrunerChBox = new javax.swing.JCheckBox();
         obfuscatingProcessPanel = new javax.swing.JPanel();
         obfucateBtn = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
+        progressLabel = new javax.swing.JLabel();
+        obfuscationProgressBar = new javax.swing.JProgressBar();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 1), new java.awt.Dimension(0, 1), new java.awt.Dimension(32767, 1));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("JavaScript Obfuscartor v1.0");
+        setTitle("JavaScript Obfuscator v1.0");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         mainPanel.setLayout(new java.awt.GridBagLayout());
@@ -233,22 +235,21 @@ public class MainForm extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         obfuscatingProcessPanel.add(obfucateBtn, gridBagConstraints);
 
-        jLabel2.setText("jLabel2");
+        progressLabel.setText("jLabel2");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        obfuscatingProcessPanel.add(jLabel2, gridBagConstraints);
+        obfuscatingProcessPanel.add(progressLabel, gridBagConstraints);
 
-        jProgressBar1.setMaximum(4);
-        jProgressBar1.setToolTipText("");
-        jProgressBar1.setValue(2);
-        jProgressBar1.setPreferredSize(new java.awt.Dimension(150, 13));
+        obfuscationProgressBar.setToolTipText("");
+        obfuscationProgressBar.setPreferredSize(new java.awt.Dimension(150, 20));
+        obfuscationProgressBar.setStringPainted(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        obfuscatingProcessPanel.add(jProgressBar1, gridBagConstraints);
+        obfuscatingProcessPanel.add(obfuscationProgressBar, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -308,15 +309,40 @@ public class MainForm extends javax.swing.JFrame {
         String sourceCode = sourceCodeTextArea.getText();
         try {
             Properties obfuscatingOptions = new Properties();
-            obfuscatingOptions.put("constantPruner", "true");
-            obfuscatingOptions.put("ternaryTransformer", "true");
-            obfuscatingOptions.put("renaming", "true");
+            obfuscatingOptions.put("constantPruner", String.valueOf(constantPrunerChBox.isSelected()));
+            obfuscatingOptions.put("ternaryTransformer", String.valueOf(ternaryTransformerChBox.isSelected()));
+            obfuscatingOptions.put("renaming", String.valueOf(variablesRenamingChBox.isSelected()));
+            obfuscatingOptions.put("reformatting", String.valueOf(removeFormattingChBox.isSelected()));
 
-            String obfuscatedCode
-                    = codeObfuscator.obfuscateCode(sourceCode, obfuscatingOptions);
-
-            mangledCodeTextArea.setText(obfuscatedCode);
-        } catch (ScriptException | NoSuchMethodException | ParseException ex) {
+            Obfuscator obfuscator = new Obfuscator(sourceCode, obfuscatingOptions, progressLabel);
+            obfuscator.addPropertyChangeListener((
+                    PropertyChangeEvent event) -> {
+                        switch (event.getPropertyName()) {
+                            case "progress":
+                                obfuscationProgressBar.setValue((Integer) event.getNewValue());
+                                break;
+                            case "state":
+                                switch ((StateValue) event.getNewValue()) {
+                                    case STARTED:
+                                        obfuscationProgressBar.setValue(0);
+                                        obfuscationProgressBar.setVisible(true);
+                                        progressLabel.setVisible(true);
+                                        break;
+                                    case DONE:
+                                        obfuscationProgressBar.setVisible(false);
+                                        progressLabel.setVisible(false);
+                                        try {
+                                            mangledCodeTextArea.setText(obfuscator.get());
+                                        } catch (InterruptedException | ExecutionException interruptedException) {
+                                            interruptedException.printStackTrace();
+                                        }
+                                        break;
+                                }
+                                break;
+                        }
+                    });
+            obfuscator.execute();
+        } catch (ScriptException | FileNotFoundException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_obfucateBtnActionPerformed
@@ -399,12 +425,6 @@ public class MainForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             MainForm mainForm = new MainForm();
-            try {
-                codeObfuscator = new Obfuscator();
-            } catch (FileNotFoundException | ScriptException ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage());
-                System.exit(1);
-            }
             mainForm.setVisible(true);
         });
     }
@@ -415,8 +435,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler1;
     private javax.swing.JPanel generalOptionsPanel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel leftPanel;
@@ -426,6 +444,8 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton obfucateBtn;
     private javax.swing.JPanel obfuscatingOptionsPanel;
     private javax.swing.JPanel obfuscatingProcessPanel;
+    private javax.swing.JProgressBar obfuscationProgressBar;
+    private javax.swing.JLabel progressLabel;
     private javax.swing.JCheckBox removeFormattingChBox;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JButton saveCodeBtn;
