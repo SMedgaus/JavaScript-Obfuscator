@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -119,7 +118,6 @@ final public class Obfuscator extends SwingWorker<String, String> {
             setProgress(Math.round((float) (i + 1) / numOfStages * 100));
             publish(progressMessage);
             m.mangle(JSONTreeObject);
-            TimeUnit.SECONDS.sleep(2);
         }
 
         setProgress(Math.round((float) (numOfStages - 1) / numOfStages * 100));
