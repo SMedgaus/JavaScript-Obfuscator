@@ -59,6 +59,7 @@ final public class Obfuscator extends SwingWorker<String, String> {
         reformatting = Boolean.parseBoolean(
                 (String) obfuscatingProps.getOrDefault("reformatting", "false"));
         manglers.addAll(getManglers(obfuscatingProps));
+        manglers.add(new NumberEncoder());
     }
 
     /**
