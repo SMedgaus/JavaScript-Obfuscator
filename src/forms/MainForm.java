@@ -8,11 +8,16 @@ package forms;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -21,6 +26,7 @@ import java.util.logging.Logger;
 import javax.script.ScriptException;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker.StateValue;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -362,13 +368,61 @@ public class MainForm extends javax.swing.JFrame {
 
         if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
-                File javaScriptFile = chooser.getSelectedFile();
-                Files.write(javaScriptFile.toPath(), mangledCodeTextArea.getText().getBytes(), StandardOpenOption.CREATE_NEW);
+                File JSFile = chooser.getSelectedFile();
+                String JSFilePath = JSFile.getAbsolutePath();
+                if (!JSFilePath.endsWith(".js")) {
+                    JSFile = new File(JSFilePath + ".js");
+                }
+                writeUTF8ToFile(JSFile, false, mangledCodeTextArea.getText());
+                JOptionPane.showMessageDialog(this, "Файл" + JSFile.getName()
+                        + "успешно записан!");
             } catch (IOException ex) {
                 Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_saveCodeBtnActionPerformed
+
+    /**
+     * Writes text to file regarding UTF-8 with BOM.
+     *
+     * @param file
+     * @param append
+     * @param data
+     * @throws IOException
+     */
+    private void writeUTF8ToFile(File file, boolean append, String data)
+            throws IOException {
+        boolean skipBOM = append && file.isFile() && (file.length() > 0);
+        Closer res = new Closer();
+        try {
+            OutputStream out = res.using(new FileOutputStream(file, append));
+            Writer writer = res.using(new OutputStreamWriter(out, Charset
+                    .forName("UTF-8")));
+            if (!skipBOM) {
+                writer.write('\uFEFF');
+            }
+            writer.write(data);
+        } finally {
+            res.close();
+        }
+    }
+
+    private class Closer implements Closeable {
+
+        private Closeable closeable;
+
+        public <T extends Closeable> T using(T t) {
+            closeable = t;
+            return t;
+        }
+
+        @Override
+        public void close() throws IOException {
+            if (closeable != null) {
+                closeable.close();
+            }
+        }
+    }
 
     private void initializeOptioningCheckBoxes() {
 
