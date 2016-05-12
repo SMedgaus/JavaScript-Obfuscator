@@ -374,8 +374,8 @@ public class MainForm extends javax.swing.JFrame {
                     JSFile = new File(JSFilePath + ".js");
                 }
                 writeUTF8ToFile(JSFile, false, mangledCodeTextArea.getText());
-                JOptionPane.showMessageDialog(this, "Файл" + JSFile.getName()
-                        + "успешно записан!");
+                JOptionPane.showMessageDialog(this, "Файл " + JSFile.getName()
+                        + " успешно записан!");
             } catch (IOException ex) {
                 Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
             }
