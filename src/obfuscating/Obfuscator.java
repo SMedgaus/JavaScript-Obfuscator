@@ -59,7 +59,6 @@ final public class Obfuscator extends SwingWorker<String, String> {
         reformatting = Boolean.parseBoolean(
                 (String) obfuscatingProps.getOrDefault("reformatting", "false"));
         manglers.addAll(getManglers(obfuscatingProps));
-        manglers.add(new NumberEncoder());
     }
 
     /**
@@ -81,6 +80,10 @@ final public class Obfuscator extends SwingWorker<String, String> {
 
         if (obfuscatingOptions.getProperty("renaming", "false").equals("true")) {
             manglers.add(new RenamingMangler());
+        }
+        
+        if (obfuscatingOptions.getProperty("numberEncoding", "false").equals("true")) {
+            manglers.add(new NumberEncoder());
         }
 
         return manglers;
@@ -114,6 +117,10 @@ final public class Obfuscator extends SwingWorker<String, String> {
 
             if (m instanceof RenamingMangler) {
                 progressMessage = "Переименование";
+            }
+            
+            if (m instanceof NumberEncoder) {
+                progressMessage = "Кодирование чисел";
             }
 
             setProgress(Math.round((float) (i + 1) / numOfStages * 100));

@@ -82,6 +82,7 @@ public class MainForm extends javax.swing.JFrame {
         variablesRenamingChBox = new javax.swing.JCheckBox();
         removeFormattingChBox = new javax.swing.JCheckBox();
         constantPrunerChBox = new javax.swing.JCheckBox();
+        numberEncodingChBox = new javax.swing.JCheckBox();
         obfuscatingProcessPanel = new javax.swing.JPanel();
         obfucateBtn = new javax.swing.JButton();
         progressLabel = new javax.swing.JLabel();
@@ -211,6 +212,14 @@ public class MainForm extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         obfuscatingOptionsPanel.add(constantPrunerChBox, gridBagConstraints);
 
+        numberEncodingChBox.setText("Кодирование чисел");
+        numberEncodingChBox.setToolTipText("<html>\nПредставление чисел в виде<br>\n арифметических выражений.\n</html>");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        obfuscatingOptionsPanel.add(numberEncodingChBox, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -319,6 +328,7 @@ public class MainForm extends javax.swing.JFrame {
             obfuscatingOptions.put("ternaryTransformer", String.valueOf(ternaryTransformerChBox.isSelected()));
             obfuscatingOptions.put("renaming", String.valueOf(variablesRenamingChBox.isSelected()));
             obfuscatingOptions.put("reformatting", String.valueOf(removeFormattingChBox.isSelected()));
+            obfuscatingOptions.put("numberEncoding", String.valueOf(numberEncodingChBox.isSelected()));
 
             Obfuscator obfuscator = new Obfuscator(sourceCode, obfuscatingOptions, progressLabel);
             obfuscator.addPropertyChangeListener((
@@ -495,6 +505,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton loadCodeBtn;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTextArea mangledCodeTextArea;
+    private javax.swing.JCheckBox numberEncodingChBox;
     private javax.swing.JButton obfucateBtn;
     private javax.swing.JPanel obfuscatingOptionsPanel;
     private javax.swing.JPanel obfuscatingProcessPanel;
