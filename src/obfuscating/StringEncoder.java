@@ -6,6 +6,8 @@
 package obfuscating;
 
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -38,7 +40,9 @@ public class StringEncoder implements Mangler {
 
         splitWords(code);
 
-        extractConstantsToFunctions(code);
+        extractConstantsToFunction(code);
+
+        representInEncodedFormat(code);
 
     }
 
@@ -80,7 +84,7 @@ public class StringEncoder implements Mangler {
                 });
     }
 
-    private void extractConstantsToFunctions(JSONObject code) {
+    private void extractConstantsToFunction(JSONObject code) {
         JSONWalker.walk(code, (JSONObject node,
                 Object parent) -> {
                     String type = (String) node.get("type");
@@ -92,7 +96,7 @@ public class StringEncoder implements Mangler {
                     }
                     return TraversingOption.CONTINUE;
                 });
-        
+
         JSONWalker.walk(code, (JSONObject node,
                 Object parent) -> {
                     String type = (String) node.get("type");
@@ -104,41 +108,41 @@ public class StringEncoder implements Mangler {
                         if (replacing && allConstants.containsKey(value)) {
                             int number = allConstants.get(value);
                             replacedConstants.put(value, number);
-                            
+
                             JSONObject newNode = new JSONObject();
                             newNode.put("type", "CallExpression");
-                            
+
                             JSONObject callee = new JSONObject();
                             callee.put("type", "Identifier");
                             callee.put("name", functionName);
                             newNode.put("callee", callee);
-                            
+
                             JSONObject argument = new JSONObject();
                             argument.put("type", "Literal");
                             argument.put("value", number);
                             argument.put("raw", "'" + value + "'");
-                            
+
                             JSONArray arguments = new JSONArray();
                             arguments.add(argument);
-                            
+
                             newNode.put("arguments", arguments);
-                            
+
                             JSONWalker.replaceNodeInParent(parent, node, newNode);
                         }
                     }
                     return TraversingOption.CONTINUE;
                 });
-        
+
         final StringBuilder sb = new StringBuilder();
         sb.append("function ").append(functionName).append("(number){");
-        
+
         allConstants.forEach((String s,
                 Integer i) -> {
-            sb.append("if(").append(i).append(")return '").append(s).append("';");
-        });
-        
+                    sb.append("if(").append(i).append(")return '").append(s).append("';");
+                });
+
         sb.append("}");
-        
+
         try {
             JSONObject newFunction = new Esprima().parseCode(sb.toString());
             newFunction = (JSONObject) ((List) newFunction.get("body")).get(0);
@@ -150,6 +154,65 @@ public class StringEncoder implements Mangler {
         } catch (FileNotFoundException | ScriptException ex) {
             Logger.getLogger(TernaryTransformer.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void representInEncodedFormat(JSONObject code) {
+
+        final String BASE64DecoderFunc = "f" + System.nanoTime();
+
+        final StringBuilder stringBuilder = new StringBuilder();
+
+        JSONWalker.walk(code, (JSONObject node,
+                Object parent) -> {
+                    String type = (String) node.get("type");
+                    if (type.equals("Literal") && (node.get("value") instanceof String)) {
+                        String value = (String) node.get("value");
+                        
+                        boolean toBASE64 = random.nextBoolean();
+                        if (toBASE64) {
+                            String encodedValue = null;
+                            try {
+                                encodedValue = Base64.getEncoder().encodeToString(value.getBytes("UTF-8"));
+                            } catch (UnsupportedEncodingException ex) {
+                                Logger.getLogger(StringEncoder.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            
+                            node.remove("raw");
+                            node.remove("value");
+                            
+                            node.put("type", "CallExpression");
+
+                            JSONObject callee = new JSONObject();
+                            callee.put("type", "Identifier");
+                            callee.put("name", BASE64DecoderFunc);
+
+                            node.put("callee", callee);
+
+                            JSONArray arguments = new JSONArray();
+                            
+                            JSONObject argument = new JSONObject();
+                            argument.put("type", "Literal");
+                            argument.put("raw", "'" + encodedValue + "'");
+                            argument.put("value", encodedValue);
+                            arguments.add(argument);
+                            
+                            node.put("arguments", arguments);
+                            
+                            return TraversingOption.SKIP;
+                            
+                        } else { //unicode representation
+                            stringBuilder.setLength(0);
+                            for (int i = 0; i < value.chars().toArray().length; i++) {
+                                int valueChar = (char) value.chars().toArray()[i];
+                                stringBuilder.append("\\u").append(Integer.toHexString(valueChar));
+                            }
+                            String newValue = stringBuilder.toString();
+                            node.put("raw", "'" + newValue + "'");
+                            node.put("value", newValue);
+                        }
+                    }
+                    return TraversingOption.CONTINUE;
+                });
     }
 
 }
