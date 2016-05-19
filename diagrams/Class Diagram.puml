@@ -2,26 +2,28 @@
     title UML Class Diagram - JavaScript Obfuscator
     package obfuscating {
 
-        class Obfuscator {
-            -String code
+        class Obfuscator <<SwingWorker>> {
+            -String sourceCode
             -List<Mangler> manglers
 
-            +Obfuscator()
-            +String obfuscateCode(String code, 
-                \tProperties obfuscatingOptions)
+            +Obfuscator(String sourceCode, Properties obfuscatingOptions)
+            -List<Mangler> getManglers(Properties obfuscatingOptions)
+            #String doInBackground()
+            #process(List<String> chunks)
         }
 
         interface Mangler {
-            +void mangle(JSONObject codeSyntaxTree)
+            +mangle(JSONObject codeSyntaxTree)
         }
 
         class ConstantPruner implements Mangler
         class TextEncoder implements Mangler
         class NumberEncoder implements Mangler
-        class LoopMangler implements Mangler
         class ConditionMangler implements Mangler
+        class TernaryTransformer implements Mangler
+        class RenamingMangler implements Mangler
         
-        Obfuscator "1" o- "0..*" Mangler
+        Obfuscator "1" o-- "0..*" Mangler
     }
 
     package forms {
@@ -30,5 +32,28 @@
         }
     }
 
+    package traversing {
+        class JSONWalker {
+            +walk(JSONObject node, NodeWorker worker)
+            +replaceNodeInParent(Object parent, JSONObject oldNode, JSONObject newNode)
+        }
+
+        enum TraversingOption {
+            CONTINUE
+            SKIP
+            BREAK
+        }
+
+        interface NodeWorker {
+            +TraversingOption workWithNode(JSONObject node, Object parent)
+        }
+
+        JSONWalker <-up- Mangler
+        JSONWalker --> NodeWorker
+        JSONWalker --> TraversingOption
+        NodeWorker --> TraversingOption
+    }
+
     MainForm "1" o-- "1" Obfuscator
+
 @enduml
