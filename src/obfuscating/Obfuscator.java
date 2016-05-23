@@ -59,7 +59,6 @@ final public class Obfuscator extends SwingWorker<String, String> {
         reformatting = Boolean.parseBoolean(
                 (String) obfuscatingProps.getOrDefault("reformatting", "false"));
         manglers.addAll(getManglers(obfuscatingProps));
-        manglers.add(new StringEncoder());
     }
 
     /**
@@ -79,14 +78,18 @@ final public class Obfuscator extends SwingWorker<String, String> {
             manglers.add(new TernaryTransformer());
         }
 
-        if (obfuscatingOptions.getProperty("renaming", "false").equals("true")) {
-            manglers.add(new RenamingMangler());
-        }
-        
         if (obfuscatingOptions.getProperty("numberEncoding", "false").equals("true")) {
             manglers.add(new NumberEncoder());
         }
 
+        if (obfuscatingOptions.getProperty("stringEncoding", "false").equals("true")) {
+            manglers.add(new StringEncoder());
+        }
+
+        if (obfuscatingOptions.getProperty("renaming", "false").equals("true")) {
+            manglers.add(new RenamingMangler());
+        }
+        
         return manglers;
     }
 
@@ -116,14 +119,18 @@ final public class Obfuscator extends SwingWorker<String, String> {
                 progressMessage = "Преобразование if-else";
             }
 
-            if (m instanceof RenamingMangler) {
-                progressMessage = "Переименование";
-            }
-            
             if (m instanceof NumberEncoder) {
                 progressMessage = "Кодирование чисел";
             }
 
+            if (m instanceof StringEncoder) {
+                progressMessage = "Кодирование строк";
+            }
+
+            if (m instanceof RenamingMangler) {
+                progressMessage = "Переименование";
+            }
+            
             setProgress(Math.round((float) (i + 1) / numOfStages * 100));
             publish(progressMessage);
             m.mangle(JSONTreeObject);
