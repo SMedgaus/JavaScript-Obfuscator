@@ -240,8 +240,4 @@ public class StringEncoder implements Mangler {
                     return TraversingOption.CONTINUE;
                 });
     }
-
-    public static void main(String[] args) {
-        System.out.println("");
-    }
 }
