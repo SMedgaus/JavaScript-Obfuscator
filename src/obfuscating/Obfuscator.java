@@ -78,6 +78,10 @@ final public class Obfuscator extends SwingWorker<String, String> {
             manglers.add(new TernaryTransformer());
         }
 
+        if (obfuscatingOptions.getProperty("conditionMangling", "false").equals("true")) {
+            manglers.add(new ConditionMangler());
+        }
+
         if (obfuscatingOptions.getProperty("numberEncoding", "false").equals("true")) {
             manglers.add(new NumberEncoder());
         }

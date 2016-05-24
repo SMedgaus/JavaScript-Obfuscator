@@ -83,7 +83,8 @@ public class MainForm extends javax.swing.JFrame {
         removeFormattingChBox = new javax.swing.JCheckBox();
         constantPrunerChBox = new javax.swing.JCheckBox();
         numberEncodingChBox = new javax.swing.JCheckBox();
-        stringEncodingCheckBox = new javax.swing.JCheckBox();
+        stringEncodingChBox = new javax.swing.JCheckBox();
+        conditionManglingChBox = new javax.swing.JCheckBox();
         obfuscatingProcessPanel = new javax.swing.JPanel();
         obfucateBtn = new javax.swing.JButton();
         progressLabel = new javax.swing.JLabel();
@@ -192,7 +193,7 @@ public class MainForm extends javax.swing.JFrame {
         variablesRenamingChBox.setToolTipText("<html>\nПреобразование имён всех<br>\nпеременных в непонятную <br>\nпоследовательность символов.\n</html>");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         obfuscatingOptionsPanel.add(variablesRenamingChBox, gridBagConstraints);
 
@@ -209,7 +210,7 @@ public class MainForm extends javax.swing.JFrame {
         constantPrunerChBox.setToolTipText("<html>\nПоиск  простых констант в коде<br>\n(числа, строки, булевые значения)<br>\n и подстановка в местах их исполь-<br>\nзования их значений.\n</html>");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         obfuscatingOptionsPanel.add(constantPrunerChBox, gridBagConstraints);
 
@@ -217,17 +218,25 @@ public class MainForm extends javax.swing.JFrame {
         numberEncodingChBox.setToolTipText("<html>\nПредставление чисел в виде<br>\n арифметических выражений.\n</html>");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         obfuscatingOptionsPanel.add(numberEncodingChBox, gridBagConstraints);
 
-        stringEncodingCheckBox.setText("Кодирование строк");
-        stringEncodingCheckBox.setToolTipText("<html>\nПредставление строк в виде<br>\n кодов символов, а также в <br>\nформате Base64.\n</html>");
+        stringEncodingChBox.setText("Кодирование строк");
+        stringEncodingChBox.setToolTipText("<html>\nПредставление строк в виде<br>\n кодов символов, а также в <br>\nформате Base64.\n</html>");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        obfuscatingOptionsPanel.add(stringEncodingCheckBox, gridBagConstraints);
+        obfuscatingOptionsPanel.add(stringEncodingChBox, gridBagConstraints);
+
+        conditionManglingChBox.setText("Логическое преобразование");
+        conditionManglingChBox.setToolTipText("<html>\nИнвертирование сравнений, <br>\nа также запутывание булевых <br>\nзначений.\n</html>");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        obfuscatingOptionsPanel.add(conditionManglingChBox, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -338,7 +347,8 @@ public class MainForm extends javax.swing.JFrame {
             obfuscatingOptions.put("renaming", String.valueOf(variablesRenamingChBox.isSelected()));
             obfuscatingOptions.put("reformatting", String.valueOf(removeFormattingChBox.isSelected()));
             obfuscatingOptions.put("numberEncoding", String.valueOf(numberEncodingChBox.isSelected()));
-            obfuscatingOptions.put("stringEncoding", String.valueOf(stringEncodingCheckBox.isSelected()));
+            obfuscatingOptions.put("stringEncoding", String.valueOf(stringEncodingChBox.isSelected()));
+            obfuscatingOptions.put("conditionMangling", String.valueOf(conditionManglingChBox.isSelected()));
 
             Obfuscator obfuscator = new Obfuscator(sourceCode, obfuscatingOptions, progressLabel);
             obfuscator.addPropertyChangeListener((
@@ -505,6 +515,7 @@ public class MainForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox chooseAllOptionsChBox;
+    private javax.swing.JCheckBox conditionManglingChBox;
     private javax.swing.JCheckBox constantPrunerChBox;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JPanel generalOptionsPanel;
@@ -525,7 +536,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel rightPanel;
     private javax.swing.JButton saveCodeBtn;
     private javax.swing.JTextArea sourceCodeTextArea;
-    private javax.swing.JCheckBox stringEncodingCheckBox;
+    private javax.swing.JCheckBox stringEncodingChBox;
     private javax.swing.JCheckBox ternaryTransformerChBox;
     private javax.swing.JCheckBox variablesRenamingChBox;
     // End of variables declaration//GEN-END:variables
