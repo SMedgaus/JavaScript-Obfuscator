@@ -86,7 +86,7 @@ public class MainForm extends javax.swing.JFrame {
         stringEncodingChBox = new javax.swing.JCheckBox();
         conditionManglingChBox = new javax.swing.JCheckBox();
         obfuscatingProcessPanel = new javax.swing.JPanel();
-        obfucateBtn = new javax.swing.JButton();
+        obfuscateBtn = new javax.swing.JButton();
         progressLabel = new javax.swing.JLabel();
         obfuscationProgressBar = new javax.swing.JProgressBar();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 1), new java.awt.Dimension(0, 1), new java.awt.Dimension(32767, 1));
@@ -251,22 +251,23 @@ public class MainForm extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.PAGE_START;
+        gridBagConstraints.insets = new java.awt.Insets(25, 0, 0, 0);
         rightPanel.add(generalOptionsPanel, gridBagConstraints);
 
         obfuscatingProcessPanel.setLayout(new java.awt.GridBagLayout());
 
-        obfucateBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/obfuscateBtn.png"))); // NOI18N
-        obfucateBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        obfucateBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        obfucateBtn.addActionListener(new java.awt.event.ActionListener() {
+        obfuscateBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/obfuscateBtn.png"))); // NOI18N
+        obfuscateBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        obfuscateBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        obfuscateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                obfucateBtnActionPerformed(evt);
+                obfuscateBtnActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        obfuscatingProcessPanel.add(obfucateBtn, gridBagConstraints);
+        obfuscatingProcessPanel.add(obfuscateBtn, gridBagConstraints);
 
         progressLabel.setText("jLabel2");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -338,7 +339,7 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_loadCodeBtnActionPerformed
 
-    private void obfucateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_obfucateBtnActionPerformed
+    private void obfuscateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_obfuscateBtnActionPerformed
         String sourceCode = sourceCodeTextArea.getText();
         try {
             Properties obfuscatingOptions = new Properties();
@@ -378,17 +379,20 @@ public class MainForm extends javax.swing.JFrame {
                         }
                     });
             obfuscator.execute();
-        } catch (ScriptException | FileNotFoundException ex) {
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ScriptException  ex) {
+            JOptionPane.showMessageDialog(this, "Ошибка распознавания кода! Проверьте синтаксис!");
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, "Не найдена папка lib и необходимые библиотеки в ней!");
+            System.exit(0);
         }
-    }//GEN-LAST:event_obfucateBtnActionPerformed
+    }//GEN-LAST:event_obfuscateBtnActionPerformed
 
     private void chooseAllOptionsChBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chooseAllOptionsChBoxMouseClicked
         boolean shouldSelectAll = chooseAllOptionsChBox.isSelected();
         optioningCheckBoxes.stream().forEach(checkbox -> {
             checkbox.setSelected(shouldSelectAll);
         });
-        obfuscatingProcessPanel.setVisible(shouldSelectAll);
+        obfuscateBtn.setEnabled(shouldSelectAll);
     }//GEN-LAST:event_chooseAllOptionsChBoxMouseClicked
 
     private void saveCodeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveCodeBtnActionPerformed
@@ -465,7 +469,7 @@ public class MainForm extends javax.swing.JFrame {
                 @Override
                 public void mouseClicked(MouseEvent evt) {
                     chooseAllOptionsChBox.setSelected(areAllOptionsSelected());
-                    obfuscatingProcessPanel.setVisible(isAnyOptionSelected());
+                    obfuscateBtn.setEnabled(isAnyOptionSelected());
                 }
             });
         });
@@ -527,7 +531,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTextArea mangledCodeTextArea;
     private javax.swing.JCheckBox numberEncodingChBox;
-    private javax.swing.JButton obfucateBtn;
+    private javax.swing.JButton obfuscateBtn;
     private javax.swing.JPanel obfuscatingOptionsPanel;
     private javax.swing.JPanel obfuscatingProcessPanel;
     private javax.swing.JProgressBar obfuscationProgressBar;

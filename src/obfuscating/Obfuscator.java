@@ -10,6 +10,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -46,8 +48,8 @@ final public class Obfuscator extends SwingWorker<String, String> {
             JLabel progressStatus) throws FileNotFoundException, ScriptException {
         this.nashornEngine = new ScriptEngineManager().getEngineByName("nashorn");
 
-        nashornEngine.eval(new FileReader("libs/esprima.js"));
-        nashornEngine.eval(new FileReader("libs/escodegen.js"));
+        nashornEngine.eval(new FileReader("lib/esprima.js"));
+        nashornEngine.eval(new FileReader("lib/escodegen.js"));
 
         this.esprima = (JSObject) nashornEngine.get("esprima");
         this.escodegen = (JSObject) nashornEngine.get("escodegen");
@@ -56,6 +58,13 @@ final public class Obfuscator extends SwingWorker<String, String> {
         this.sourceCode = sourceCode;
         this.progressStatus = progressStatus;
 
+        Invocable inv = (Invocable) nashornEngine;
+        try {
+            inv.invokeMethod(esprima, "parse", sourceCode);
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(Obfuscator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         reformatting = Boolean.parseBoolean(
                 (String) obfuscatingProps.getOrDefault("reformatting", "false"));
         manglers.addAll(getManglers(obfuscatingProps));
@@ -135,6 +144,10 @@ final public class Obfuscator extends SwingWorker<String, String> {
                 progressMessage = "Переименование";
             }
             
+            if (m instanceof ConditionMangler) {
+                progressMessage = "Логическое преобразование";
+            }
+            
             setProgress(Math.round((float) (i + 1) / numOfStages * 100));
             publish(progressMessage);
             m.mangle(JSONTreeObject);
@@ -143,6 +156,8 @@ final public class Obfuscator extends SwingWorker<String, String> {
         setProgress(Math.round((float) (numOfStages - 1) / numOfStages * 100));
         publish("Построение кода");
 
+        new FunctionShuffler().mangle(JSONTreeObject);
+        
         tree = inv.invokeMethod(JSON, "parse", JSONTreeObject.toJSONString());
 
         Object generatingOptions = inv.invokeMethod(JSON, "parse",
