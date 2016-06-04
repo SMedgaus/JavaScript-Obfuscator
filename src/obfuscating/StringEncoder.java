@@ -50,6 +50,8 @@ public class StringEncoder implements Mangler {
 
     private boolean isBase64Used = false;
     
+    private boolean isAdditionalFunctionUsed = false;
+    
     @Override
     public void mangle(JSONObject code) {
 
@@ -138,6 +140,8 @@ public class StringEncoder implements Mangler {
                             int number = allConstants.get(value);
                             replacedConstants.put(value, number);
 
+                            isAdditionalFunctionUsed |= true;
+                            
                             JSONObject newNode = new JSONObject();
                             newNode.put("type", "CallExpression");
 
@@ -162,35 +166,37 @@ public class StringEncoder implements Mangler {
                     return TraversingOption.CONTINUE;
                 });
 
-        final StringBuilder sb = new StringBuilder();
-        sb.append("function ").append(functionName).append("(number){");
-        sb.append("switch(number) {");
-
-        allConstants.forEach((String s,
-                Integer i) -> {
-                    sb.append("case ").append(i).append(": return String.fromCharCode(");
-                    for (int j = 0; j < s.toCharArray().length; j++) {
-                        char c = s.toCharArray()[j];
-                        sb.append((int) c);
-                        if (j < s.toCharArray().length - 1) {
-                            sb.append(", ");
+        if (isAdditionalFunctionUsed) {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("function ").append(functionName).append("(number){");
+            sb.append("switch(number) {");
+            
+            allConstants.forEach((String s,
+                    Integer i) -> {
+                        sb.append("case ").append(i).append(": return String.fromCharCode(");
+                        for (int j = 0; j < s.toCharArray().length; j++) {
+                            char c = s.toCharArray()[j];
+                            sb.append((int) c);
+                            if (j < s.toCharArray().length - 1) {
+                                sb.append(", ");
+                            }
                         }
-                    }
-                    sb.append(");");
-                });
-
-        sb.append("}}");
-
-        try {
-            JSONObject newFunction = new Esprima().parseCode(sb.toString());
-            newFunction = (JSONObject) ((List) newFunction.get("body")).get(0);
-
-            JSONArray bodyArray = (JSONArray) code.get("body");
-            if (bodyArray != null) {
-                bodyArray.add(newFunction);
+                        sb.append(");");
+                    });
+            
+            sb.append("}}");
+            
+            try {
+                JSONObject newFunction = new Esprima().parseCode(sb.toString());
+                newFunction = (JSONObject) ((List) newFunction.get("body")).get(0);
+                
+                JSONArray bodyArray = (JSONArray) code.get("body");
+                if (bodyArray != null) {
+                    bodyArray.add(newFunction);
+                }
+            } catch (FileNotFoundException | ScriptException ex) {
+                Logger.getLogger(TernaryTransformer.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (FileNotFoundException | ScriptException ex) {
-            Logger.getLogger(TernaryTransformer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

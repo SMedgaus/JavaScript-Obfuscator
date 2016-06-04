@@ -43,8 +43,8 @@ public class Esprima {
         if (!initialized) {
             nashornEngine = new ScriptEngineManager().getEngineByName("nashorn");
             
-            nashornEngine.eval(new FileReader("libs/esprima.js"));
-            nashornEngine.eval(new FileReader("libs/escodegen.js"));
+            nashornEngine.eval(new FileReader("lib/esprima.js"));
+            nashornEngine.eval(new FileReader("lib/escodegen.js"));
             
             esprima = (JSObject) nashornEngine.get("esprima");
             escodegen = (JSObject) nashornEngine.get("escodegen");
