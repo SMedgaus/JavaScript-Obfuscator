@@ -64,7 +64,7 @@ final public class Obfuscator extends SwingWorker<String, String> {
         } catch (NoSuchMethodException ex) {
             Logger.getLogger(Obfuscator.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         reformatting = Boolean.parseBoolean(
                 (String) obfuscatingProps.getOrDefault("reformatting", "false"));
         manglers.addAll(getManglers(obfuscatingProps));
@@ -102,7 +102,7 @@ final public class Obfuscator extends SwingWorker<String, String> {
         if (obfuscatingOptions.getProperty("renaming", "false").equals("true")) {
             manglers.add(new RenamingMangler());
         }
-        
+
         return manglers;
     }
 
@@ -121,6 +121,8 @@ final public class Obfuscator extends SwingWorker<String, String> {
         JSONObject JSONTreeObject = (JSONObject) new JSONParser().parse(JSONTree);
 
         for (int i = 0; i < manglers.size(); i++) {
+            failIfInterrupted();
+            
             Mangler m = manglers.get(i);
             String progressMessage = "";
 
@@ -143,11 +145,11 @@ final public class Obfuscator extends SwingWorker<String, String> {
             if (m instanceof RenamingMangler) {
                 progressMessage = "Переименование";
             }
-            
+
             if (m instanceof ConditionMangler) {
                 progressMessage = "Логическое преобразование";
             }
-            
+
             setProgress(Math.round((float) (i + 1) / numOfStages * 100));
             publish(progressMessage);
             m.mangle(JSONTreeObject);
@@ -157,7 +159,7 @@ final public class Obfuscator extends SwingWorker<String, String> {
         publish("Построение кода");
 
         new FunctionShuffler().mangle(JSONTreeObject);
-        
+
         tree = inv.invokeMethod(JSON, "parse", JSONTreeObject.toJSONString());
 
         Object generatingOptions = inv.invokeMethod(JSON, "parse",
@@ -177,5 +179,10 @@ final public class Obfuscator extends SwingWorker<String, String> {
         progressStatus.setVisible(true);
         progressStatus.setText(chunks.get(chunks.size() - 1) + "...");
     }
-    
+
+    private static void failIfInterrupted() throws InterruptedException {
+        if (Thread.currentThread().isInterrupted()) {
+            throw new InterruptedException("Interrupted while obfuscating!");
+        }
+    }
 }

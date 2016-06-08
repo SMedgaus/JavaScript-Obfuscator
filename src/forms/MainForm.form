@@ -74,6 +74,9 @@
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>
@@ -108,6 +111,9 @@
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>
@@ -156,6 +162,9 @@
                   <Events>
                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="chooseAllOptionsChBoxMouseClicked"/>
                   </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                  </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                       <GridBagConstraints gridX="1" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
@@ -176,6 +185,9 @@
                         <Property name="text" type="java.lang.String" value="&#x41f;&#x440;&#x435;&#x43e;&#x431;&#x440;&#x430;&#x437;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x435; if-else"/>
                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&#x41f;&#x440;&#x435;&#x43e;&#x431;&#x440;&#x430;&#x437;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x435; if-else &#x432; &#x442;&#x435;&#x440;&#x43d;&#x430;&#x440;&#x43d;&#x44b;&#x439;&lt;br&gt;&#xa;&#x43e;&#x43f;&#x435;&#x440;&#x430;&#x442;&#x43e;&#x440; ?: , &#x435;&#x441;&#x43b;&#x438; &#x44d;&#x442;&#x43e; &#x432;&#x43e;&#x437;&#x43c;&#x43e;&#x436;&#x43d;&#x43e;. &#x415;&#x441;&#x43b;&#x438; &lt;br&gt;&#xa;Else &#x43f;&#x443;&#x441;&#x442;&#x43e;, &#x442;&#x43e; &#x437;&#x430;&#x43f;&#x43e;&#x43b;&#x43d;&#x44f;&#x435;&#x442;&#x441;&#x44f; &#x43c;&#x443;&#x441;&#x43e;&#x440;&#x43d;&#x44b;&#x43c;&#x438; &lt;br&gt;&#xa;&#x444;&#x443;&#x43d;&#x43a;&#x446;&#x438;&#x44f;&#x43c;&#x438;.&#xa;&lt;/html&gt;"/>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                           <GridBagConstraints gridX="0" gridY="1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
@@ -187,6 +199,9 @@
                         <Property name="text" type="java.lang.String" value="&#x41f;&#x435;&#x440;&#x435;&#x438;&#x43c;&#x435;&#x43d;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x435; &#x43f;&#x435;&#x440;&#x435;&#x43c;&#x435;&#x43d;&#x43d;&#x44b;&#x445;"/>
                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&#x41f;&#x440;&#x435;&#x43e;&#x431;&#x440;&#x430;&#x437;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x435; &#x438;&#x43c;&#x451;&#x43d; &#x432;&#x441;&#x435;&#x445;&lt;br&gt;&#xa;&#x43f;&#x435;&#x440;&#x435;&#x43c;&#x435;&#x43d;&#x43d;&#x44b;&#x445; &#x432; &#x43d;&#x435;&#x43f;&#x43e;&#x43d;&#x44f;&#x442;&#x43d;&#x443;&#x44e; &lt;br&gt;&#xa;&#x43f;&#x43e;&#x441;&#x43b;&#x435;&#x434;&#x43e;&#x432;&#x430;&#x442;&#x435;&#x43b;&#x44c;&#x43d;&#x43e;&#x441;&#x442;&#x44c; &#x441;&#x438;&#x43c;&#x432;&#x43e;&#x43b;&#x43e;&#x432;.&#xa;&lt;/html&gt;"/>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                           <GridBagConstraints gridX="0" gridY="6" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
@@ -210,6 +225,9 @@
                         <Property name="text" type="java.lang.String" value="&#x421;&#x43e;&#x43a;&#x440;&#x430;&#x449;&#x435;&#x43d;&#x438;&#x435; &#x43a;&#x43e;&#x43d;&#x441;&#x442;&#x430;&#x43d;&#x442;"/>
                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&#x41f;&#x43e;&#x438;&#x441;&#x43a;  &#x43f;&#x440;&#x43e;&#x441;&#x442;&#x44b;&#x445; &#x43a;&#x43e;&#x43d;&#x441;&#x442;&#x430;&#x43d;&#x442; &#x432; &#x43a;&#x43e;&#x434;&#x435;&lt;br&gt;&#xa;(&#x447;&#x438;&#x441;&#x43b;&#x430;, &#x441;&#x442;&#x440;&#x43e;&#x43a;&#x438;, &#x431;&#x443;&#x43b;&#x435;&#x432;&#x44b;&#x435; &#x437;&#x43d;&#x430;&#x447;&#x435;&#x43d;&#x438;&#x44f;)&lt;br&gt;&#xa; &#x438; &#x43f;&#x43e;&#x434;&#x441;&#x442;&#x430;&#x43d;&#x43e;&#x432;&#x43a;&#x430; &#x432; &#x43c;&#x435;&#x441;&#x442;&#x430;&#x445; &#x438;&#x445; &#x438;&#x441;&#x43f;&#x43e;&#x43b;&#x44c;-&lt;br&gt;&#xa;&#x437;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x44f; &#x438;&#x445; &#x437;&#x43d;&#x430;&#x447;&#x435;&#x43d;&#x438;&#x439;.&#xa;&lt;/html&gt;"/>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                           <GridBagConstraints gridX="0" gridY="3" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
@@ -221,6 +239,9 @@
                         <Property name="text" type="java.lang.String" value="&#x41a;&#x43e;&#x434;&#x438;&#x440;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x435; &#x447;&#x438;&#x441;&#x435;&#x43b;"/>
                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&#x41f;&#x440;&#x435;&#x434;&#x441;&#x442;&#x430;&#x432;&#x43b;&#x435;&#x43d;&#x438;&#x435; &#x447;&#x438;&#x441;&#x435;&#x43b; &#x432; &#x432;&#x438;&#x434;&#x435;&lt;br&gt;&#xa; &#x430;&#x440;&#x438;&#x444;&#x43c;&#x435;&#x442;&#x438;&#x447;&#x435;&#x441;&#x43a;&#x438;&#x445; &#x432;&#x44b;&#x440;&#x430;&#x436;&#x435;&#x43d;&#x438;&#x439;.&#xa;&lt;/html&gt;"/>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                           <GridBagConstraints gridX="0" gridY="4" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
@@ -232,6 +253,9 @@
                         <Property name="text" type="java.lang.String" value="&#x41a;&#x43e;&#x434;&#x438;&#x440;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x435; &#x441;&#x442;&#x440;&#x43e;&#x43a;"/>
                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&#x41f;&#x440;&#x435;&#x434;&#x441;&#x442;&#x430;&#x432;&#x43b;&#x435;&#x43d;&#x438;&#x435; &#x441;&#x442;&#x440;&#x43e;&#x43a; &#x432; &#x432;&#x438;&#x434;&#x435;&lt;br&gt;&#xa; &#x43a;&#x43e;&#x434;&#x43e;&#x432; &#x441;&#x438;&#x43c;&#x432;&#x43e;&#x43b;&#x43e;&#x432;, &#x430; &#x442;&#x430;&#x43a;&#x436;&#x435; &#x432; &lt;br&gt;&#xa;&#x444;&#x43e;&#x440;&#x43c;&#x430;&#x442;&#x435; Base64.&#xa;&lt;/html&gt;"/>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                           <GridBagConstraints gridX="0" gridY="5" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
@@ -243,6 +267,9 @@
                         <Property name="text" type="java.lang.String" value="&#x41b;&#x43e;&#x433;&#x438;&#x447;&#x435;&#x441;&#x43a;&#x43e;&#x435; &#x43f;&#x440;&#x435;&#x43e;&#x431;&#x440;&#x430;&#x437;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x435;"/>
                         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&#x418;&#x43d;&#x432;&#x435;&#x440;&#x442;&#x438;&#x440;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x435; &#x441;&#x440;&#x430;&#x432;&#x43d;&#x435;&#x43d;&#x438;&#x439;, &lt;br&gt;&#xa;&#x430; &#x442;&#x430;&#x43a;&#x436;&#x435; &#x437;&#x430;&#x43f;&#x443;&#x442;&#x44b;&#x432;&#x430;&#x43d;&#x438;&#x435; &#x431;&#x443;&#x43b;&#x435;&#x432;&#x44b;&#x445; &lt;br&gt;&#xa;&#x437;&#x43d;&#x430;&#x447;&#x435;&#x43d;&#x438;&#x439;.&#xa;&lt;/html&gt;"/>
                       </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                      </AuxValues>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                           <GridBagConstraints gridX="0" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
@@ -273,6 +300,9 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="obfuscateBtnActionPerformed"/>
                   </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                  </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                       <GridBagConstraints gridX="0" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
@@ -297,9 +327,28 @@
                     </Property>
                     <Property name="stringPainted" type="boolean" value="true"/>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+                  </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                       <GridBagConstraints gridX="0" gridY="2" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
+                    </Constraint>
+                  </Constraints>
+                </Component>
+                <Component class="javax.swing.JButton" name="cancelBtn">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="&#x41e;&#x442;&#x43c;&#x435;&#x43d;&#x438;&#x442;&#x44c;"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelBtnActionPerformed"/>
+                  </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="cancelBtn.setVisible(false);&#xd;&#xa;"/>
+                  </AuxValues>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                      <GridBagConstraints gridX="0" gridY="3" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
                     </Constraint>
                   </Constraints>
                 </Component>

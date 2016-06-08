@@ -107,7 +107,7 @@ public class NumberEncoder implements Mangler {
                 });
     }
 
-    private String toHexString(int number) {
+    public static String toHexString(int number) {
         return "0X" + Integer.toHexString(number);
     }
 

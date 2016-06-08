@@ -70,7 +70,7 @@ public class RenamingMangler implements Mangler {
      * @param data - array of bytes to be hashed
      * @return hash of bytes (String representation)
      */
-    private String getMD5String(byte[] data) {
+    public static String getMD5String(byte[] data) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(data);
@@ -92,7 +92,7 @@ public class RenamingMangler implements Mangler {
      * @param hash
      * @return
      */
-    private static String mangleHash(String hash) {
+    public static String mangleHash(String hash) {
         StringBuilder result = new StringBuilder();
         hash = hash.substring(0, hash.length() / 2);
         final int START_LETTER = 0x0540; //armenian letter 

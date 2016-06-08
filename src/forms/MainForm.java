@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,8 +41,9 @@ public class MainForm extends javax.swing.JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private final ArrayList<JCheckBox> optioningCheckBoxes = new ArrayList<>();
+    public final ArrayList<JCheckBox> optioningCheckBoxes = new ArrayList<>();
 
+    private Obfuscator obfuscator;
     /**
      * Creates new form MainForm
      *
@@ -89,6 +91,8 @@ public class MainForm extends javax.swing.JFrame {
         obfuscateBtn = new javax.swing.JButton();
         progressLabel = new javax.swing.JLabel();
         obfuscationProgressBar = new javax.swing.JProgressBar();
+        cancelBtn = new javax.swing.JButton();
+        cancelBtn.setVisible(false);
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 1), new java.awt.Dimension(0, 1), new java.awt.Dimension(32767, 1));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -285,6 +289,17 @@ public class MainForm extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         obfuscatingProcessPanel.add(obfuscationProgressBar, gridBagConstraints);
 
+        cancelBtn.setText("Отменить");
+        cancelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelBtnActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        obfuscatingProcessPanel.add(cancelBtn, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -340,51 +355,55 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_loadCodeBtnActionPerformed
 
     private void obfuscateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_obfuscateBtnActionPerformed
-        String sourceCode = sourceCodeTextArea.getText();
-        try {
-            Properties obfuscatingOptions = new Properties();
-            obfuscatingOptions.put("constantPruner", String.valueOf(constantPrunerChBox.isSelected()));
-            obfuscatingOptions.put("ternaryTransformer", String.valueOf(ternaryTransformerChBox.isSelected()));
-            obfuscatingOptions.put("renaming", String.valueOf(variablesRenamingChBox.isSelected()));
-            obfuscatingOptions.put("reformatting", String.valueOf(removeFormattingChBox.isSelected()));
-            obfuscatingOptions.put("numberEncoding", String.valueOf(numberEncodingChBox.isSelected()));
-            obfuscatingOptions.put("stringEncoding", String.valueOf(stringEncodingChBox.isSelected()));
-            obfuscatingOptions.put("conditionMangling", String.valueOf(conditionManglingChBox.isSelected()));
-
-            Obfuscator obfuscator = new Obfuscator(sourceCode, obfuscatingOptions, progressLabel);
-            obfuscator.addPropertyChangeListener((
-                    PropertyChangeEvent event) -> {
-                        switch (event.getPropertyName()) {
-                            case "progress":
-                                obfuscationProgressBar.setValue((Integer) event.getNewValue());
-                                break;
-                            case "state":
-                                switch ((StateValue) event.getNewValue()) {
-                                    case STARTED:
-                                        obfuscationProgressBar.setValue(0);
-                                        obfuscationProgressBar.setVisible(true);
-                                        progressLabel.setVisible(true);
-                                        break;
-                                    case DONE:
-                                        obfuscationProgressBar.setVisible(false);
-                                        progressLabel.setVisible(false);
-                                        try {
-                                            mangledCodeTextArea.setText(obfuscator.get());
-                                        } catch (InterruptedException | ExecutionException interruptedException) {
-                                            interruptedException.printStackTrace();
-                                        }
-                                        break;
-                                }
-                                break;
-                        }
-                    });
-            obfuscator.execute();
-        } catch (ScriptException  ex) {
-            JOptionPane.showMessageDialog(this, "Ошибка распознавания кода! Проверьте синтаксис!");
-        } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(this, "Не найдена папка lib и необходимые библиотеки в ней!");
-            System.exit(0);
-        }
+            String sourceCode = sourceCodeTextArea.getText();
+            cancelBtn.setVisible(true);
+            try {
+                Properties obfuscatingOptions = new Properties();
+                obfuscatingOptions.put("constantPruner", String.valueOf(constantPrunerChBox.isSelected()));
+                obfuscatingOptions.put("ternaryTransformer", String.valueOf(ternaryTransformerChBox.isSelected()));
+                obfuscatingOptions.put("renaming", String.valueOf(variablesRenamingChBox.isSelected()));
+                obfuscatingOptions.put("reformatting", String.valueOf(removeFormattingChBox.isSelected()));
+                obfuscatingOptions.put("numberEncoding", String.valueOf(numberEncodingChBox.isSelected()));
+                obfuscatingOptions.put("stringEncoding", String.valueOf(stringEncodingChBox.isSelected()));
+                obfuscatingOptions.put("conditionMangling", String.valueOf(conditionManglingChBox.isSelected()));
+                
+                obfuscator = new Obfuscator(sourceCode, obfuscatingOptions, progressLabel);
+                obfuscator.addPropertyChangeListener((
+                        PropertyChangeEvent event) -> {
+                            switch (event.getPropertyName()) {
+                                case "progress":
+                                    obfuscationProgressBar.setValue((Integer) event.getNewValue());
+                                    break;
+                                case "state":
+                                    switch ((StateValue) event.getNewValue()) {
+                                        case STARTED:
+                                            obfuscateBtn.setEnabled(false);
+                                            obfuscationProgressBar.setValue(0);
+                                            obfuscationProgressBar.setVisible(true);
+                                            progressLabel.setVisible(true);
+                                            break;
+                                        case DONE:
+                                            obfuscationProgressBar.setVisible(false);
+                                            progressLabel.setVisible(false);
+                                            try {
+                                                mangledCodeTextArea.setText(obfuscator.get());
+                                            } catch (CancellationException ex) {
+                                                obfuscateBtn.setEnabled(true);
+                                            } catch (InterruptedException | ExecutionException interruptedException) {
+                                                interruptedException.printStackTrace();
+                                            }
+                                            break;
+                                    }
+                                    break;
+                            }
+                        });
+                obfuscator.execute();
+            } catch (ScriptException ex) {
+                JOptionPane.showMessageDialog(this, "Ошибка распознавания кода! Проверьте синтаксис!");
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "Не найдена папка lib и необходимые библиотеки в ней!");
+                System.exit(0);
+            }
     }//GEN-LAST:event_obfuscateBtnActionPerformed
 
     private void chooseAllOptionsChBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chooseAllOptionsChBoxMouseClicked
@@ -415,6 +434,11 @@ public class MainForm extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_saveCodeBtnActionPerformed
+
+    private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
+        cancelBtn.setVisible(false);
+        obfuscator.cancel(true);
+    }//GEN-LAST:event_cancelBtnActionPerformed
 
     /**
      * Writes text to file regarding UTF-8 with BOM.
@@ -518,9 +542,10 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox chooseAllOptionsChBox;
-    private javax.swing.JCheckBox conditionManglingChBox;
-    private javax.swing.JCheckBox constantPrunerChBox;
+    private javax.swing.JButton cancelBtn;
+    public javax.swing.JCheckBox chooseAllOptionsChBox;
+    public javax.swing.JCheckBox conditionManglingChBox;
+    public javax.swing.JCheckBox constantPrunerChBox;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JPanel generalOptionsPanel;
     private javax.swing.JLabel jLabel1;
@@ -529,20 +554,20 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel leftPanel;
     private javax.swing.JButton loadCodeBtn;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JTextArea mangledCodeTextArea;
-    private javax.swing.JCheckBox numberEncodingChBox;
-    private javax.swing.JButton obfuscateBtn;
+    public javax.swing.JTextArea mangledCodeTextArea;
+    public javax.swing.JCheckBox numberEncodingChBox;
+    public javax.swing.JButton obfuscateBtn;
     private javax.swing.JPanel obfuscatingOptionsPanel;
     private javax.swing.JPanel obfuscatingProcessPanel;
-    private javax.swing.JProgressBar obfuscationProgressBar;
+    public javax.swing.JProgressBar obfuscationProgressBar;
     private javax.swing.JLabel progressLabel;
     private javax.swing.JCheckBox removeFormattingChBox;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JButton saveCodeBtn;
-    private javax.swing.JTextArea sourceCodeTextArea;
-    private javax.swing.JCheckBox stringEncodingChBox;
-    private javax.swing.JCheckBox ternaryTransformerChBox;
-    private javax.swing.JCheckBox variablesRenamingChBox;
+    public javax.swing.JTextArea sourceCodeTextArea;
+    public javax.swing.JCheckBox stringEncodingChBox;
+    public javax.swing.JCheckBox ternaryTransformerChBox;
+    public javax.swing.JCheckBox variablesRenamingChBox;
     // End of variables declaration//GEN-END:variables
 
 }
